@@ -1,0 +1,73 @@
+---
+title: "Find indexed Spacedrive files with macOS Spotlight"
+description: "Spacedrive indexes your locations into Core Spotlight so your files appear in system-wide Spotlight results and open directly in Spacedrive."
+---
+
+Spacedrive integrates with Core Spotlight, the same search engine that powers the Spotlight bar you open with Command-Space. When Spacedrive indexes a location, it feeds file metadata into Core Spotlight so those files appear in your Spotlight search results alongside results from Mail, Contacts, and other apps — and clicking a result opens the file directly in Spacedrive.
+
+## How the integration works
+
+When Spacedrive indexes a location, it registers metadata for each file with Core Spotlight using a Spotlight importer. Each record includes:
+
+- **File name** — the full filename including extension
+- **Kind** — the human-readable file type (e.g., "JPEG image", "PDF document")
+- **Path** — the absolute file path on disk
+- **Modification date** — the last-modified timestamp from the filesystem
+- **Thumbnail** — a small preview image where available
+
+This metadata is what Spotlight searches when you type a query. Because Spacedrive registers files proactively, results can appear even for files in locations that Spotlight's own crawler might not have visited.
+
+## Search for a file in Spotlight
+
+<Steps>
+  <Step title="Open Spotlight">
+    Press **Command-Space** to open the Spotlight search bar.
+  </Step>
+  <Step title="Type a filename or keyword">
+    Start typing the name of the file you're looking for. Results from your Spacedrive locations appear under a **Spacedrive** section in the results list.
+  </Step>
+  <Step title="Open in Spacedrive">
+    Click the result (or select it with the arrow keys and press Return). Spacedrive opens and navigates directly to the file.
+  </Step>
+</Steps>
+
+## Re-index Spotlight
+
+If Spotlight results seem stale — for example, a file you added recently isn't showing up — you can trigger a fresh index from within Spacedrive:
+
+1. Open the **Spacedrive** menu in the menu bar.
+2. Choose **Re-index Spotlight**.
+
+Spacedrive will re-submit metadata for all files in your indexed locations to Core Spotlight. Large libraries may take a few minutes to appear in results.
+
+<Tip>
+  Re-indexing is rarely necessary during normal use. Spacedrive updates Spotlight automatically whenever you add, move, rename, or delete a file in an indexed location.
+</Tip>
+
+## What Spotlight can search
+
+Spotlight searches the metadata attributes Spacedrive provides. Currently that includes:
+
+| Attribute | Example |
+|---|---|
+| File name | `budget-2026.xlsx` |
+| Extension | `pdf`, `heic`, `mov` |
+| Kind | `PDF document`, `HEVC video` |
+| Modification date | "modified this week" filters in Spotlight |
+
+## Limitations
+
+<Note>
+  Content-based full-text search — searching inside the text of a document — is not yet available through Spotlight integration. Spotlight can find a file named `meeting-notes.md` but cannot search the text inside it. Use Spacedrive's built-in search for content-level queries.
+</Note>
+
+Only files in locations you have added to Spacedrive are indexed. Files outside your Spacedrive locations are not submitted to Core Spotlight by Spacedrive (though Spotlight's own crawler may still find them independently).
+
+<CardGroup cols={2}>
+  <Card title="Search" icon="magnifying-glass" href="/guides/search">
+    Use Spacedrive's built-in search for content and advanced filters.
+  </Card>
+  <Card title="Locations" icon="folder-plus" href="/guides/locations">
+    Add folders and drives so Spacedrive indexes them.
+  </Card>
+</CardGroup>

@@ -1,0 +1,70 @@
+---
+title: "Spacedrive: local-first Finder replacement for macOS"
+description: "Spacedrive replaces Finder on macOS Tahoe with a local-first file manager that unifies local disks, cloud storage, and deep OS integration."
+---
+
+Spacedrive is a file manager built exclusively for macOS Tahoe that is designed to replace Finder for day-to-day use. It keeps all of your file data on your Mac — no cloud account required, no telemetry — while giving you a single unified view of local disks and cloud storage alike. If you have been looking for a Finder replacement that feels native, stays fast on large libraries, and handles cloud folders without switching apps, Spacedrive is built for that.
+
+## What makes Spacedrive different from Finder
+
+Spacedrive goes beyond what Finder offers in four key areas:
+
+- **Cloud storage as first-class volumes.** Services like S3, Google Drive, OneDrive, Dropbox, and WebDAV appear alongside your local disks in the same sidebar. You browse, copy, and move files across them the same way you would with any local folder.
+- **GPU-accelerated thumbnails.** Spacedrive uses VideoToolbox and Metal to generate image and video previews quickly, even for large photo libraries and high-resolution video files.
+- **Spotlight integration.** Files indexed by Spacedrive are searchable through Spotlight, so your existing search habits keep working.
+- **Theme customization.** A token-driven theme system lets you change colors, icons, and layout to match how you work — something Finder has never supported.
+
+## Local-first means your data stays on your Mac
+
+"Local-first" is how Spacedrive describes its approach to your data:
+
+- **Your files never leave your machine** unless you deliberately move them to a cloud location. The file index is a SQLite database stored locally on your Mac, not on a remote server.
+- **No sign-up required.** You do not need an account to use Spacedrive. Open the app, create a Library, and start browsing.
+- **No telemetry.** Spacedrive does not report usage data or crash diagnostics to any external service.
+
+## Libraries and Locations
+
+Two concepts underpin how Spacedrive organizes your files:
+
+**Libraries** are the top-level containers for your file index. A Library holds the SQLite database that tracks every file Spacedrive has seen, along with your preferences, tags, and thumbnail cache. You can have more than one Library — for example, a personal one and a work one — and switch between them without any data mixing.
+
+**Locations** are the folders and volumes that a Library watches and indexes. A Location can be a local folder on your Mac, an external drive, or a cloud storage bucket. When you add a Location, Spacedrive scans it, generates thumbnails, and keeps the index up to date as files change. Removing a Location removes it from the index but does not delete the underlying files.
+
+## Supported cloud providers
+
+You can add any of the following as a Location:
+
+| Provider | Connection type |
+|---|---|
+| Amazon S3 (and S3-compatible) | Direct API |
+| Google Drive | Direct API |
+| Microsoft OneDrive | Direct API |
+| Dropbox | Direct API |
+| WebDAV | Direct API |
+
+Spacedrive also auto-detects mounted cloud apps. If you have the Google Drive, OneDrive, or Dropbox desktop app installed, the folders they sync under `~/Library/CloudStorage/` and `~/Library/Mobile Documents/` appear automatically as Locations.
+
+## macOS integration
+
+Spacedrive is built to be the file manager your Mac reaches for instead of Finder. It integrates with macOS at the following surfaces:
+
+- **Default folder handler.** Set Spacedrive as the default app for opening folders so that double-clicking a folder anywhere on macOS opens it in Spacedrive, not Finder.
+- **Finder Sync overlays.** Status badges appear on files and folders in Finder windows while Spacedrive is running, showing indexing and sync state.
+- **Quick Look.** Spacedrive provides its own Quick Look Preview and Thumbnail extensions, so previews work from both Spacedrive and Finder.
+- **Spotlight.** Files in your Libraries are indexed into Core Spotlight, making them searchable system-wide.
+- **Services menu.** Right-click any file in macOS and Spacedrive actions — reveal, move, copy path — appear in the Services submenu.
+
+<CardGroup cols={2}>
+  <Card title="Install Spacedrive" icon="arrow-down-to-bracket" href="/installation">
+    Download and install Spacedrive on your Mac, grant the required permissions, and launch the app for the first time.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Create your first Library, add a Location, and start browsing your files in under five minutes.
+  </Card>
+  <Card title="Connect cloud storage" icon="cloud" href="/guides/cloud-storage">
+    Add S3, Google Drive, OneDrive, Dropbox, or WebDAV as a Location and browse cloud files alongside local ones.
+  </Card>
+  <Card title="Replace Finder" icon="folder-open" href="/macos/finder-replacement">
+    Set Spacedrive as your default folder handler and learn which Finder workflows it covers.
+  </Card>
+</CardGroup>

@@ -1,0 +1,81 @@
+---
+title: "Switch and customize Spacedrive's theme and colors"
+description: "Spacedrive ships with dark and light themes and a token-driven system for deep color customization. Switch modes or install a theme pack."
+---
+
+Spacedrive gives you full control over how the interface looks — from a quick toggle between dark and light to swapping every color in the UI through theme packs. The current release ships with dark and light modes; the full theme pack system and animated transitions are planned for a future release.
+
+## Dark and light themes
+
+<Tabs>
+  <Tab title="Enable dark mode">
+    <Steps>
+      <Step title="Open Settings">
+        Choose **Spacedrive → Settings** from the menu bar, or press **⌘,**.
+      </Step>
+      <Step title="Go to Appearance">
+        Select **Appearance** in the left sidebar.
+      </Step>
+      <Step title="Choose Dark">
+        Under **Theme**, select **Dark**. The change takes effect immediately — no restart needed.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Enable light mode">
+    <Steps>
+      <Step title="Open Settings">
+        Choose **Spacedrive → Settings** from the menu bar, or press **⌘,**.
+      </Step>
+      <Step title="Go to Appearance">
+        Select **Appearance** in the left sidebar.
+      </Step>
+      <Step title="Choose Light">
+        Under **Theme**, select **Light**. The change takes effect immediately — no restart needed.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Follow macOS appearance automatically
+
+If you prefer Spacedrive to match whatever macOS is currently set to, turn on **Auto (follow system)** in **Settings → Appearance → Theme**. Spacedrive will switch between dark and light the moment you change the macOS appearance in **System Settings → Appearance**.
+
+## Accent color
+
+The primary accent color — used for selected items, focused inputs, buttons, and status indicators — defaults to `#2499FF` (bright blue). You can change it from **Settings → Appearance → Accent Color** using the color picker. The new color is applied immediately across the entire UI: active selections in the file browser, the sidebar highlight, focused inputs, and inline status badges all update together.
+
+## Token-driven theme system
+
+Spacedrive's visual layer is built on a design token system rooted at hue 235. Every color in the UI — surfaces, sidebar, menus, text, status indicators — maps to a named token rather than a hardcoded value. This means replacing a theme is a data operation: swap the token values, and every control in the app updates at once without any layout changes.
+
+Tokens are grouped by UI region:
+
+- **Accent** — primary highlight, hover, and pressed states
+- **Ink** — primary, secondary, and tertiary text
+- **App surfaces** — main content area, boxes, overlays, inputs, lines, and scrollbars
+- **Sidebar** — sidebar background, section dividers, item states
+- **Menu** — contextual menus and dropdown surfaces
+- **Status** — success, warning, error, and info indicators
+
+<Note>
+The full theme pack system — including installable archives that replace all token values and swap optional assets — is not yet available in the current build. Today's release includes dark mode, light mode, and the accent color picker described above.
+</Note>
+
+## Theme packs (coming soon)
+
+Theme packs are content-addressed archives that replace token values and can optionally swap out assets like icons. Once the feature lands, you will install them from **Settings → Themes → Install Theme Pack**. A theme pack can redefine every token in every region — accent, ink, all app surfaces, sidebar, menus, and status colors — giving you complete control over the palette without touching any layout or spacing values.
+
+## GPU motion pipeline (coming soon)
+
+Following the theme pack release, a future update adds an animated transition layer. Theme packs will be able to include transition definitions that control how the UI animates between states — hover effects, panel transitions, and selection feedback. Existing theme packs will continue to work without modification.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Appearance settings" href="/customization/appearance">
+    Adjust sidebar layout, thumbnail sizes, font scale, and vibrancy.
+  </Card>
+  <Card title="Frequently asked questions" href="/troubleshooting/faq">
+    Common questions about Spacedrive, including system requirements.
+  </Card>
+</CardGroup>

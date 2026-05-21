@@ -1,0 +1,216 @@
+---
+title: "Spacedrive IPC server-push events — full reference"
+description: "Real-time server-pushed JSON-RPC events for monitoring indexing job progress, file entry changes, and library state in Spacedrive."
+---
+
+The Spacedrive daemon pushes events to all connected clients as they occur. You do not subscribe to specific events — every persistent connection receives all events. Your client is responsible for filtering by the `method` field.
+
+## How events work
+
+Server-pushed events differ from responses in two ways:
+
+1. They have **no `id` field** — they are fire-and-forget messages from the daemon
+2. The `method` field always begins with `event:`
+
+To receive events, keep your socket connection open after sending requests. The daemon will push event frames as they occur, interleaved with any responses to your requests. Match frames with an `id` field to outstanding requests; treat frames without an `id` field as events.
+
+## Persistent connection example
+
+<CodeGroup>
+
+```python Python (asyncio)
+import asyncio
+import json
+import os
+
+SOCK = (
+    os.path.expanduser("~")
+    + "/Library/Group Containers/group.com.spacedrive.main/daemon.sock"
+)
+
+async def listen():
+    reader, writer = await asyncio.open_unix_connection(SOCK)
+
+    # Optionally send a request first
+    req = json.dumps({
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "query:library.list",
+        "params": {}
+    }) + "\n"
+    writer.write(req.encode())
+    await writer.drain()
+
+    # Loop over all incoming lines
+    while True:
+        line = await reader.readline()
+        if not line:
+            break
+        frame = json.loads(line)
+        if "id" in frame:
+            # This is a response to one of our requests
+            print("response:", frame)
+        else:
+            # This is a server-pushed event
+            method = frame.get("method", "")
+            params = frame.get("params", {})
+            print(f"event {method}:", params)
+
+asyncio.run(listen())
+```
+
+```bash shell loop
+#!/bin/bash
+SOCK="$HOME/Library/Group Containers/group.com.spacedrive.main/daemon.sock"
+
+# Open a persistent connection and read events line by line
+socat - UNIX-CONNECT:"$SOCK" | while IFS= read -r line; do
+  method=$(echo "$line" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('method',''))" 2>/dev/null)
+  if [[ "$method" == event:* ]]; then
+    echo "EVENT: $line"
+  else
+    echo "RESPONSE: $line"
+  fi
+done
+```
+
+</CodeGroup>
+
+---
+
+## event:job.progress
+
+Emitted periodically while an indexing job is running. Use this to display a progress bar or log throughput in automation scripts.
+
+### Event payload
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `job_id` | string | UUIDv7 of the running job. |
+| `progress` | number | Completion fraction from `0.0` to `1.0`. |
+| `current_file` | string | Absolute path of the file currently being processed. |
+
+### Example
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "event:job.progress",
+  "params": {
+    "job_id": "01HZQK2J3M4N5P6Q7R8S9T0UV5",
+    "progress": 0.42,
+    "current_file": "/Users/alice/Documents/Archive/photos/2024/vacation.heic"
+  }
+}
+```
+
+---
+
+## event:job.completed
+
+Emitted once when a job finishes, whether it succeeded, failed, or was cancelled. Check the job's `state` via `query:job.list` to determine the outcome.
+
+### Event payload
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `job_id` | string | UUIDv7 of the completed job. |
+| `library_id` | string | UUIDv7 of the library the job belongs to. |
+
+### Example
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "event:job.completed",
+  "params": {
+    "job_id": "01HZQK2J3M4N5P6Q7R8S9T0UV5",
+    "library_id": "01HZQK2J3M4N5P6Q7R8S9T0UV1"
+  }
+}
+```
+
+---
+
+## event:entry.added
+
+Emitted when a new file or directory is indexed and added to the VDFS. The full `VdfsEntry` object is included in the payload so you can update your UI or data structures without a follow-up query.
+
+### Event payload
+
+The `params` field is a complete `VdfsEntry` object. See [query:vdfs.list_entries](/ipc/queries#queryvdfslist_entries) for the full field list.
+
+### Example
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "event:entry.added",
+  "params": {
+    "id": "01HZQK2J3M4N5P6Q7R8S9T0UV8",
+    "name": "budget-2026.xlsx",
+    "path": "/Users/alice/Documents/Work/budget-2026.xlsx",
+    "is_directory": false,
+    "kind": "document",
+    "size": 38912,
+    "extension": "xlsx",
+    "created_at": "2026-05-21T11:00:00Z",
+    "modified_at": "2026-05-21T11:00:00Z",
+    "thumbnail_url": null
+  }
+}
+```
+
+---
+
+## event:entry.removed
+
+Emitted when an indexed entry is removed — either because the underlying file was deleted or because the location was removed from the library.
+
+### Event payload
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `entry_id` | string | UUIDv7 of the entry that was removed. |
+| `library_id` | string | UUIDv7 of the library the entry belonged to. |
+
+### Example
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "event:entry.removed",
+  "params": {
+    "entry_id": "01HZQK2J3M4N5P6Q7R8S9T0UV6",
+    "library_id": "01HZQK2J3M4N5P6Q7R8S9T0UV1"
+  }
+}
+```
+
+---
+
+## event:library.changed
+
+Emitted when the state of a library changes — for example, when a new location is added or the library name is updated.
+
+### Event payload
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `library_id` | string | UUIDv7 of the library that changed. |
+
+### Example
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "event:library.changed",
+  "params": {
+    "library_id": "01HZQK2J3M4N5P6Q7R8S9T0UV1"
+  }
+}
+```
+
+<Tip>
+When you receive `event:library.changed`, call `query:library.list` or `query:location.list` to refresh your local state. The event intentionally carries only the `library_id` to keep the payload small.
+</Tip>

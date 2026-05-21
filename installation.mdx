@@ -1,0 +1,62 @@
+---
+title: "Download and install Spacedrive on macOS Tahoe 26.5"
+description: "Install Spacedrive on macOS Tahoe 26.5 or later. Covers system requirements, .dmg setup, Gatekeeper prompts, and Full Disk Access."
+---
+
+Spacedrive is a macOS Tahoe-exclusive app. Before you download, confirm that your Mac meets the requirements below, then follow the steps to install and verify that everything is working.
+
+<Warning>
+  Spacedrive requires **macOS Tahoe 26.5 or later**. Earlier versions of macOS — including Sonoma and Sequoia — are not supported and there are no backport plans. Check your macOS version in **Apple menu → About This Mac**.
+</Warning>
+
+## System requirements
+
+| Requirement | Minimum |
+|---|---|
+| macOS | Tahoe 26.5 or later |
+| Chip | Apple Silicon (M1 or later) |
+| Disk space | ~200 MB |
+
+Intel Macs are not supported. Spacedrive is compiled for Apple Silicon only.
+
+## Install Spacedrive
+
+<Steps>
+  <Step title="Download the .dmg">
+    Go to the [Spacedrive releases page](https://github.com/foobisdweik/spacedrive-native/releases) and download the latest `Spacedrive.dmg`.
+  </Step>
+  <Step title="Open the disk image">
+    Double-click **Spacedrive.dmg** in your Downloads folder. A Finder window opens showing the Spacedrive app icon and an **Applications** folder shortcut.
+  </Step>
+  <Step title="Drag Spacedrive to Applications">
+    Drag **Spacedrive.app** onto the **Applications** folder shortcut in the disk image window. Wait for the copy to finish, then eject the disk image by pressing **⌘E** or clicking the eject button next to it in the Finder sidebar.
+  </Step>
+  <Step title="Launch Spacedrive">
+    Open **Applications** and double-click **Spacedrive**. The app opens to a blank window the first time you launch it.
+  </Step>
+</Steps>
+
+<Note>
+  **Gatekeeper prompt on first launch.** macOS may display an alert that reads *"Spacedrive" is an app downloaded from the internet. Are you sure you want to open it?* Click **Open** to proceed. If you see a different alert saying the app cannot be opened, go to **System Settings → Privacy & Security**, scroll to the bottom of the page, and click **Open Anyway** next to the Spacedrive entry.
+</Note>
+
+## Grant Full Disk Access
+
+After the app opens, macOS will prompt you to grant **Full Disk Access**. Spacedrive needs this permission to index folders across your Mac — including your home directory, external drives, and cloud-synced locations. Without it, many folders will be invisible to the indexer.
+
+To grant access:
+
+1. Click **Open System Settings** in the prompt, or go to **System Settings → Privacy & Security → Full Disk Access**.
+2. Click the toggle next to **Spacedrive** to enable it.
+3. If prompted, enter your Mac password.
+4. Return to Spacedrive. The app does not need to be relaunched.
+
+<Note>
+  You can grant or revoke Full Disk Access at any time from **System Settings → Privacy & Security → Full Disk Access**. See [macOS permissions](/macos/permissions) for details on all permissions Spacedrive may request.
+</Note>
+
+## Verify the installation
+
+Once the app is open and Full Disk Access is granted, you should see a blank Spacedrive window with a sidebar on the left and an empty content area. No libraries or locations are set up yet — that happens in the next step.
+
+If the window does not appear or the app fails to open, see [Troubleshooting common issues](/troubleshooting/common-issues).

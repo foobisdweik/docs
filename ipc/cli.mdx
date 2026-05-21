@@ -1,0 +1,188 @@
+---
+title: "sd — Spacedrive command-line interface reference"
+description: "The sd CLI connects to the Spacedrive daemon and exposes library, location, job, and browse commands for shell scripting and automation."
+---
+
+The `sd` binary is a thin JSON-RPC client that wraps common daemon operations as shell-friendly subcommands. It connects to the daemon socket, sends the appropriate IPC method, and prints the result as formatted JSON or plain text.
+
+## Installation
+
+The `sd` binary is bundled inside `Spacedrive.app`. To use it from your shell, either invoke it by full path or add it to your `PATH`:
+
+```bash
+# Invoke directly
+/Applications/Spacedrive.app/Contents/MacOS/sd --help
+
+# Or add to PATH in your shell profile
+export PATH="/Applications/Spacedrive.app/Contents/MacOS:$PATH"
+```
+
+## Global flag
+
+```
+--socket <path>
+```
+
+Override the daemon socket path. By default `sd` resolves the socket at `~/Library/Group Containers/group.com.spacedrive.main/daemon.sock`, falling back to `~/Library/Application Support/spacedrive/daemon.sock`.
+
+```bash
+sd --socket /tmp/sd-dev.sock ping
+```
+
+---
+
+## sd ping
+
+Check whether the daemon is running and reachable. Prints the resolved socket path and the active GPU backend.
+
+```bash
+sd ping
+```
+
+**Example output:**
+
+```
+daemon socket: /Users/alice/Library/Group Containers/group.com.spacedrive.main/daemon.sock
+status: ok
+gpu backend: videotoolbox
+```
+
+Use this as a health check in automation scripts before issuing other commands.
+
+---
+
+## sd library list
+
+List all libraries known to the daemon. Output is pretty-printed JSON.
+
+```bash
+sd library list
+```
+
+**Example output:**
+
+```json
+[
+  {
+    "id": "01HZQK2J3M4N5P6Q7R8S9T0UV1",
+    "name": "My Library",
+    "path": "/Users/alice/Library/Application Support/spacedrive/libraries/my-library.sdlibrary"
+  }
+]
+```
+
+---
+
+## sd library create \<name\>
+
+Create a new library with the given name. The daemon allocates a UUIDv7, creates the `.sdlibrary` directory, and returns the new library's summary as JSON.
+
+```bash
+sd library create "Work Projects"
+```
+
+**Example output:**
+
+```json
+{
+  "id": "01HZQK2J3M4N5P6Q7R8S9T0UV2",
+  "name": "Work Projects",
+  "path": "/Users/alice/Library/Application Support/spacedrive/libraries/work-projects.sdlibrary"
+}
+```
+
+---
+
+## sd location list
+
+List all indexed locations across all libraries.
+
+```bash
+sd location list
+```
+
+<Note>
+`sd location list` output is not yet fully wired. The command is available; structured JSON output will be added in an upcoming release.
+</Note>
+
+---
+
+## sd location add \<path\>
+
+Add a folder as an indexed location. The daemon registers the path for indexing and begins watching it for file-system changes.
+
+```bash
+sd location add /Users/alice/Documents/Work
+```
+
+<Note>
+`sd location add` is not yet fully wired end-to-end. The command parses and validates the path; the full IPC round-trip will be available in an upcoming release. Use the `action:location.add` IPC method directly in the meantime.
+</Note>
+
+---
+
+## sd jobs
+
+List all running and recently completed jobs across all libraries.
+
+```bash
+sd jobs
+```
+
+<Note>
+`sd jobs` output is not yet fully wired. Structured JSON output will be added in an upcoming release. Use `query:job.list` via the IPC protocol directly in the meantime.
+</Note>
+
+---
+
+## sd browse \<path\>
+
+Browse files at a given path using the VDFS index. Intended for interactive inspection of indexed content from the terminal.
+
+```bash
+sd browse /Users/alice/Documents
+```
+
+<Note>
+`sd browse` output is not yet fully wired. Full VDFS-backed directory listing will be available in an upcoming release. Use `query:vdfs.list_entries` via the IPC protocol directly in the meantime.
+</Note>
+
+---
+
+## Using --socket for development
+
+When running a development daemon on a non-default socket path, pass `--socket` to redirect all `sd` commands:
+
+```bash
+# Start a dev daemon on a custom socket
+sd --socket /tmp/sd-dev.sock ping
+
+# List libraries on the dev daemon
+sd --socket /tmp/sd-dev.sock library list
+
+# Create a library on the dev daemon
+sd --socket /tmp/sd-dev.sock library create "Test Library"
+```
+
+<Tip>
+Use a shell alias with `--socket` to avoid repeating the path when working with a non-default socket location.
+</Tip>
+
+---
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="IPC overview" icon="plug" href="/ipc/overview">
+    Understand the JSON-RPC transport and method naming conventions.
+  </Card>
+  <Card title="Query methods" icon="magnifying-glass" href="/ipc/queries">
+    Full reference for all read-only IPC methods.
+  </Card>
+  <Card title="Action methods" icon="bolt" href="/ipc/actions">
+    Full reference for all mutation IPC methods.
+  </Card>
+  <Card title="Wire protocol" icon="code" href="/ipc/protocol">
+    Request, response, and error envelope formats.
+  </Card>
+</CardGroup>

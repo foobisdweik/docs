@@ -1,0 +1,66 @@
+---
+title: "Get started: create a library and browse your files"
+description: "Create your first library, add a local folder as a location, and browse your indexed files in Spacedrive — a step-by-step walkthrough."
+---
+
+This guide walks you through the core Spacedrive workflow: creating a library to hold your index, adding a local folder as a location, waiting for indexing to finish, and then browsing your files. By the end you'll have a working file manager with your first folder indexed.
+
+<Steps>
+  <Step title="Launch Spacedrive">
+    Open **Spacedrive** from your Applications folder. If this is your first time opening the app, macOS may ask for Full Disk Access — grant it so Spacedrive can index all your folders. You'll land on a blank window with an empty sidebar.
+
+    If you haven't installed the app yet, follow the [installation guide](/installation) first.
+  </Step>
+  <Step title="Create a library">
+    A library is the database where Spacedrive stores its index, thumbnails, and metadata. Everything you add to Spacedrive belongs to a library.
+
+    1. Click **New Library** in the left sidebar.
+    2. Type a name for your library — for example, *My Mac*.
+    3. Choose a folder on your Mac where the library database will be saved. The default location works for most people.
+    4. Click **Create**.
+
+    The library opens immediately. The sidebar now shows a **Locations** section and a **Jobs** indicator at the bottom.
+  </Step>
+  <Step title="Add a local folder">
+    A location is a folder — local or cloud — that Spacedrive indexes. Start with a local folder you use often.
+
+    1. In the sidebar, click **Add Location** (or the **+** button next to Locations).
+    2. A file picker opens. Navigate to the folder you want to add — for example, your **Documents** folder at `~/Documents`.
+    3. Click **Add**.
+
+    Spacedrive adds the folder as a location and immediately begins indexing it in the background.
+  </Step>
+  <Step title="Wait for indexing to complete">
+    Indexing runs as a background job. You can watch its progress in the **Jobs** panel at the bottom of the sidebar — click the indicator to expand it and see what's running.
+
+    Each job shows a progress bar and a description such as *Indexing ~/Documents* or *Generating thumbnails*. Indexing speed depends on the number of files in the folder; a typical Documents folder with a few thousand files takes under a minute.
+
+    You don't need to wait for indexing to finish before you start browsing — files appear in the grid as they are discovered.
+  </Step>
+  <Step title="Browse your files">
+    Click your location in the sidebar to open it. Spacedrive shows your files in a grid view with thumbnails for images, videos, and documents.
+
+    - Click a file to select it and see its details in the inspector panel on the right.
+    - Double-click a folder to navigate into it.
+    - Use the breadcrumb trail at the top to navigate back up.
+
+    As thumbnails are generated in the background, the grid fills in. Files that haven't been thumbnailed yet show a placeholder icon.
+  </Step>
+</Steps>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Manage libraries" icon="database" href="/guides/libraries">
+    Create additional libraries, rename them, or switch between them.
+  </Card>
+  <Card title="Add cloud storage" icon="cloud" href="/guides/cloud-storage">
+    Connect S3, Google Drive, OneDrive, Dropbox, or WebDAV as locations.
+  </Card>
+  <Card title="Use Spacedrive as a Finder replacement" icon="apple" href="/macos/finder-replacement">
+    Set Spacedrive as your default folder handler and integrate with the Services menu.
+  </Card>
+  <Card title="Browse and search files" icon="magnifying-glass" href="/guides/browsing">
+    Switch layouts, filter by type, and use full-text search across your locations.
+  </Card>
+</CardGroup>

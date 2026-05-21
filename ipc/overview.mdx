@@ -1,0 +1,71 @@
+---
+title: "Spacedrive IPC API: automate and extend with JSON-RPC"
+description: "Spacedrive exposes a JSON-RPC 2.0 API over a Unix domain socket for shell scripting, automation, and third-party integrations on macOS."
+---
+
+Spacedrive ships a JSON-RPC 2.0 API over a Unix domain socket, giving power users, developers, and automation scripts direct programmatic access to the same daemon that drives the GUI. You can list libraries, index locations, monitor job progress, and react to real-time file-system events — all without launching the desktop application.
+
+## Who this is for
+
+The IPC API is for:
+
+- **Power users** who want to script library management or trigger indexing from shell workflows
+- **Developers** building third-party integrations or automation tools on top of Spacedrive
+- **Automation scripts** that need to react to real-time file-system events without running the desktop GUI
+
+## Transport
+
+The daemon listens on a **Unix domain socket** and exchanges **newline-delimited JSON** frames — one JSON object per line. The protocol is JSON-RPC 2.0.
+
+### Socket path
+
+| Priority | Path |
+|----------|------|
+| Primary | `~/Library/Group Containers/group.com.spacedrive.main/daemon.sock` |
+| Fallback | `~/Library/Application Support/spacedrive/daemon.sock` |
+
+The primary path is used by the desktop app and any integrations. The fallback is used when the primary container path is unavailable.
+
+<Note>
+The socket is created with permissions `0600` (owner-only). Only the user who launched the daemon can connect to it.
+</Note>
+
+## Method naming
+
+Every IPC method follows the convention `<kind>:<domain>.<name>`:
+
+- **kind** is one of `query`, `action`, or `event`
+- **domain** is one of `vdfs`, `library`, `location`, `volume`, `job`, `system`, or `thumbnail`
+- **name** identifies the specific operation
+
+Examples: `query:library.list`, `action:location.add`, `event:job.progress`.
+
+## Two ways to use the API
+
+You can interact with the Spacedrive daemon in two ways:
+
+1. **The `sd` CLI** — a bundled command-line tool that wraps common IPC calls as shell subcommands, suitable for interactive use and simple scripts
+2. **Direct socket connection** — connect to the Unix socket from any language using standard networking primitives, send JSON-RPC requests, and read responses
+
+## Explore the IPC reference
+
+<CardGroup cols={2}>
+  <Card title="Wire protocol" icon="plug" href="/ipc/protocol">
+    Request, response, error, and server-push event envelope formats.
+  </Card>
+  <Card title="Query methods" icon="magnifying-glass" href="/ipc/queries">
+    Read-only methods for listing libraries, locations, volumes, jobs, and entries.
+  </Card>
+  <Card title="Action methods" icon="bolt" href="/ipc/actions">
+    Mutation methods for creating libraries, adding locations, and managing jobs.
+  </Card>
+  <Card title="Server-push events" icon="bell" href="/ipc/events">
+    Real-time events for job progress, entry changes, and library state.
+  </Card>
+  <Card title="sd CLI reference" icon="terminal" href="/ipc/cli">
+    Shell commands for library, location, and job management.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Get Spacedrive installed and running in minutes.
+  </Card>
+</CardGroup>

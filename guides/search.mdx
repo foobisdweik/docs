@@ -1,0 +1,40 @@
+---
+title: "Search and find files across your Spacedrive library"
+description: "Use Spacedrive's built-in search to find files by name across all indexed locations, or use macOS Spotlight for system-wide file search."
+---
+
+Spacedrive gives you two ways to find files: the in-app search bar, which searches across every location in your current library, and macOS Spotlight integration, which makes your indexed files findable from anywhere on your Mac.
+
+## In-app search
+
+Click the **search bar** at the top of the Spacedrive window, or press **Cmd+F**, to open the search field. Start typing and Spacedrive filters results live as you type — no need to press Return.
+
+Search covers all locations in the currently open library. Results show the file name, kind, and the location it belongs to. If you have multiple locations — including cloud buckets — they are all searched at once.
+
+### File name matching
+
+Spacedrive matches your query against file and folder names. The match is case-insensitive and works as a substring search, so typing `report` returns `Monthly Report.pdf`, `expense-report-2024.xlsx`, and `reports/`.
+
+### Navigating to a result
+
+Click any result to open its parent folder in the file browser, with the file selected. From there you can double-click to open it, press Space to preview it, or right-click for the full context menu.
+
+## Spotlight integration
+
+Spacedrive indexes your locations into **Core Spotlight**, the macOS system search index. This means your files appear in Spotlight results — press **Cmd+Space**, type a file name, and Spacedrive results show up alongside system results.
+
+Clicking a Spacedrive result in Spotlight opens the file directly in Spacedrive, with its location already selected in the sidebar.
+
+<Tip>
+  Use Spotlight as a quick-launch shortcut for any file in your Spacedrive library. Press Cmd+Space, start typing the file name, and press Return to open it — without switching windows first.
+</Tip>
+
+For more details on Spotlight integration and how to configure it, see [Spotlight integration](/macos/spotlight).
+
+## Planned: full-text content search
+
+The current release searches file and folder **names** only. Full-text search inside document content — searching inside PDFs, text files, and other documents using SQLite FTS5 — is planned for a future release.
+
+<Info>
+  Until full-text search is available, you can use macOS Spotlight or the Finder's built-in content search (Cmd+F in Finder) to search inside file contents.
+</Info>

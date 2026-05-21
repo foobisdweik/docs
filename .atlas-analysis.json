@@ -1,0 +1,122 @@
+{
+  "projectType": "saas",
+  "projectName": "Spacedrive",
+  "projectDescription": "A macOS Tahoe-native, local-first file manager with cloud storage integration, designed to replace Finder as your daily driver.",
+  "theme": "willow",
+  "primaryColor": "#2499FF",
+  "lightColor": "#47A9FF",
+  "darkColor": "#0080F0",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Using Spacedrive",
+            "pages": [
+              "guides/libraries",
+              "guides/locations",
+              "guides/browsing",
+              "guides/cloud-storage",
+              "guides/search"
+            ]
+          },
+          {
+            "group": "macOS Integration",
+            "pages": [
+              "macos/finder-replacement",
+              "macos/quick-look",
+              "macos/spotlight",
+              "macos/permissions"
+            ]
+          },
+          {
+            "group": "Customization",
+            "pages": [
+              "customization/themes",
+              "customization/appearance"
+            ]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": [
+              "troubleshooting/faq",
+              "troubleshooting/common-issues"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "IPC Reference",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "ipc/overview",
+              "ipc/protocol"
+            ]
+          },
+          {
+            "group": "Methods",
+            "pages": [
+              "ipc/queries",
+              "ipc/actions",
+              "ipc/events"
+            ]
+          },
+          {
+            "group": "CLI",
+            "pages": [
+              "ipc/cli"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "macOS Tahoe (26.5+) native Finder replacement",
+    "Local-first SQLite library — no cloud sign-up required",
+    "Cloud storage integration: S3, Google Drive, OneDrive, Dropbox, WebDAV",
+    "Automatic detection of iCloud, GDrive, OneDrive, Dropbox mounts",
+    "Core Spotlight and Quick Look integration",
+    "Finder Sync Extension for real-time status overlays",
+    "GPU-accelerated thumbnail pipeline via VideoToolbox and Metal",
+    "Token-driven theme system with dark/light mode",
+    "JSON-RPC 2.0 IPC over Unix socket for extensibility",
+    "Full Disk Access, Services menu, and file promise drag-out"
+  ],
+  "publicApiSurface": [
+    "query:vdfs.list_entries",
+    "query:vdfs.get_entry",
+    "query:library.list",
+    "query:location.list",
+    "query:volume.list",
+    "query:job.list",
+    "query:system.gpu_backend",
+    "query:thumbnail.endpoint",
+    "action:library.create",
+    "action:location.add",
+    "action:job.start_indexer",
+    "action:job.cancel",
+    "event:job.progress",
+    "event:job.completed",
+    "event:entry.added",
+    "event:entry.removed",
+    "sd ping",
+    "sd library list",
+    "sd library create <name>",
+    "sd location list",
+    "sd location add <path>",
+    "sd jobs",
+    "sd browse <path>"
+  ]
+}

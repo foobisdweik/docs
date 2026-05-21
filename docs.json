@@ -1,0 +1,92 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "Spacedrive",
+  "theme": "willow",
+  "colors": {
+    "primary": "#2499FF",
+    "light": "#47A9FF",
+    "dark": "#0080F0"
+  },
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/foobisdweik/spacedrive-native"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Using Spacedrive",
+            "pages": [
+              "guides/libraries",
+              "guides/locations",
+              "guides/browsing",
+              "guides/cloud-storage",
+              "guides/search"
+            ]
+          },
+          {
+            "group": "macOS Integration",
+            "pages": [
+              "macos/finder-replacement",
+              "macos/quick-look",
+              "macos/spotlight",
+              "macos/permissions"
+            ]
+          },
+          {
+            "group": "Customization",
+            "pages": [
+              "customization/themes",
+              "customization/appearance"
+            ]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": [
+              "troubleshooting/faq",
+              "troubleshooting/common-issues"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "IPC Reference",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "ipc/overview",
+              "ipc/protocol"
+            ]
+          },
+          {
+            "group": "Methods",
+            "pages": [
+              "ipc/queries",
+              "ipc/actions",
+              "ipc/events"
+            ]
+          },
+          {
+            "group": "CLI",
+            "pages": [
+              "ipc/cli"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

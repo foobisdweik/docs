@@ -1,0 +1,488 @@
+---
+title: "Spacedrive IPC query methods — complete reference"
+description: "Read-only JSON-RPC methods for listing libraries, locations, volumes, file entries, jobs, and GPU state in Spacedrive's daemon API."
+---
+
+Query methods are read-only operations — they never modify daemon state. Send them as standard JSON-RPC 2.0 requests; the `result` field in the response contains the method's output. All UUIDs are UUIDv7 strings. All paths are strings.
+
+---
+
+## query:library.list
+
+Returns all libraries known to the daemon.
+
+**No input parameters required.**
+
+### Response fields
+
+<ResponseField name="result" type="object[]">
+  Array of `LibrarySummary` objects.
+  <Expandable title="LibrarySummary fields">
+    <ResponseField name="id" type="string" required>
+      UUIDv7 identifier for the library.
+    </ResponseField>
+    <ResponseField name="name" type="string" required>
+      Human-readable library name.
+    </ResponseField>
+    <ResponseField name="path" type="string" required>
+      Absolute path to the `.sdlibrary` directory on disk.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+```json request
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "query:library.list",
+  "params": {}
+}
+```
+
+```json response
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": [
+    {
+      "id": "01HZQK2J3M4N5P6Q7R8S9T0UV1",
+      "name": "My Library",
+      "path": "/Users/alice/Library/Application Support/spacedrive/libraries/my-library.sdlibrary"
+    }
+  ]
+}
+```
+
+---
+
+## query:location.list
+
+Returns indexed locations, optionally filtered to a single library.
+
+### Input parameters
+
+<ParamField body="library_id" type="string">
+  UUIDv7 of the library to filter by. Omit or set to `null` to list locations across all libraries.
+</ParamField>
+
+### Response fields
+
+<ResponseField name="result" type="object[]">
+  Array of `LocationSummary` objects.
+  <Expandable title="LocationSummary fields">
+    <ResponseField name="id" type="string" required>
+      UUIDv7 identifier for the location.
+    </ResponseField>
+    <ResponseField name="library_id" type="string" required>
+      UUIDv7 of the library this location belongs to.
+    </ResponseField>
+    <ResponseField name="path" type="string" required>
+      Absolute path to the indexed folder.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+```json request
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": "query:location.list",
+  "params": {
+    "library_id": "01HZQK2J3M4N5P6Q7R8S9T0UV1"
+  }
+}
+```
+
+```json response
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "result": [
+    {
+      "id": "01HZQK2J3M4N5P6Q7R8S9T0UV3",
+      "library_id": "01HZQK2J3M4N5P6Q7R8S9T0UV1",
+      "path": "/Users/alice/Documents"
+    },
+    {
+      "id": "01HZQK2J3M4N5P6Q7R8S9T0UV4",
+      "library_id": "01HZQK2J3M4N5P6Q7R8S9T0UV1",
+      "path": "/Users/alice/Pictures"
+    }
+  ]
+}
+```
+
+---
+
+## query:volume.list
+
+Returns all currently mounted volumes detected by the daemon.
+
+**No input parameters required.**
+
+### Response fields
+
+<ResponseField name="result" type="object[]">
+  Array of `Volume` objects.
+  <Expandable title="Volume fields">
+    <ResponseField name="device" type="string" required>
+      Device node path (e.g. `/dev/disk3s1`).
+    </ResponseField>
+    <ResponseField name="fs_type" type="string" required>
+      Filesystem type (e.g. `apfs`, `exfat`, `hfs`).
+    </ResponseField>
+    <ResponseField name="mount_path" type="string" required>
+      Absolute path where the volume is mounted.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+```json request
+{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "method": "query:volume.list",
+  "params": {}
+}
+```
+
+```json response
+{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "result": [
+    {
+      "device": "/dev/disk3s1",
+      "fs_type": "apfs",
+      "mount_path": "/"
+    },
+    {
+      "device": "/dev/disk4s1",
+      "fs_type": "exfat",
+      "mount_path": "/Volumes/Backup Drive"
+    }
+  ]
+}
+```
+
+---
+
+## query:job.list
+
+Returns all running and recently completed jobs for a library.
+
+### Input parameters
+
+<ParamField body="library_id" type="string" required>
+  UUIDv7 of the library whose jobs you want to list.
+</ParamField>
+
+### Response fields
+
+<ResponseField name="result" type="object[]">
+  Array of `JobRecordDto` objects.
+  <Expandable title="JobRecordDto fields">
+    <ResponseField name="id" type="string" required>
+      UUIDv7 identifier for the job.
+    </ResponseField>
+    <ResponseField name="kind" type="string" required>
+      Job type string (e.g. `"indexer"`).
+    </ResponseField>
+    <ResponseField name="state" type="string" required>
+      Current state: `"running"`, `"completed"`, `"failed"`, or `"cancelled"`.
+    </ResponseField>
+    <ResponseField name="library_id" type="string" required>
+      UUIDv7 of the library this job belongs to.
+    </ResponseField>
+    <ResponseField name="started_at" type="string" required>
+      ISO 8601 timestamp when the job started.
+    </ResponseField>
+    <ResponseField name="finished_at" type="string">
+      ISO 8601 timestamp when the job finished. `null` if still running.
+    </ResponseField>
+    <ResponseField name="error" type="string">
+      Error message if the job failed. `null` otherwise.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+```json request
+{
+  "jsonrpc": "2.0",
+  "id": 4,
+  "method": "query:job.list",
+  "params": {
+    "library_id": "01HZQK2J3M4N5P6Q7R8S9T0UV1"
+  }
+}
+```
+
+```json response
+{
+  "jsonrpc": "2.0",
+  "id": 4,
+  "result": [
+    {
+      "id": "01HZQK2J3M4N5P6Q7R8S9T0UV5",
+      "kind": "indexer",
+      "state": "completed",
+      "library_id": "01HZQK2J3M4N5P6Q7R8S9T0UV1",
+      "started_at": "2026-05-21T09:00:00Z",
+      "finished_at": "2026-05-21T09:04:32Z",
+      "error": null
+    }
+  ]
+}
+```
+
+---
+
+## query:vdfs.list_entries
+
+Returns the entries at a given path within the virtual distributed filesystem (VDFS) for a library.
+
+### Input parameters
+
+<ParamField body="library_id" type="string" required>
+  UUIDv7 of the library to query.
+</ParamField>
+
+<ParamField body="parent_path" type="string" required>
+  Absolute path of the directory whose contents you want to list.
+</ParamField>
+
+### Response fields
+
+<ResponseField name="result" type="object[]">
+  Array of `VdfsEntry` objects.
+  <Expandable title="VdfsEntry fields">
+    <ResponseField name="id" type="string" required>
+      UUIDv7 identifier for the entry.
+    </ResponseField>
+    <ResponseField name="name" type="string" required>
+      File or directory name (not the full path).
+    </ResponseField>
+    <ResponseField name="path" type="string" required>
+      Absolute path to the entry on disk.
+    </ResponseField>
+    <ResponseField name="is_directory" type="boolean" required>
+      `true` if the entry is a directory.
+    </ResponseField>
+    <ResponseField name="kind" type="string" required>
+      Entry kind string (e.g. `"image"`, `"video"`, `"document"`, `"directory"`).
+    </ResponseField>
+    <ResponseField name="size" type="number" required>
+      File size in bytes. `0` for directories.
+    </ResponseField>
+    <ResponseField name="extension" type="string">
+      File extension without the leading dot (e.g. `"jpg"`). `null` for directories.
+    </ResponseField>
+    <ResponseField name="created_at" type="string" required>
+      ISO 8601 creation timestamp.
+    </ResponseField>
+    <ResponseField name="modified_at" type="string" required>
+      ISO 8601 last-modified timestamp.
+    </ResponseField>
+    <ResponseField name="thumbnail_url" type="string">
+      Full URL to the thumbnail on the daemon's loopback HTTP server. `null` if no thumbnail has been generated. Use `query:thumbnail.endpoint` to resolve the base URL.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+```json request
+{
+  "jsonrpc": "2.0",
+  "id": 5,
+  "method": "query:vdfs.list_entries",
+  "params": {
+    "library_id": "01HZQK2J3M4N5P6Q7R8S9T0UV1",
+    "parent_path": "/Users/alice/Documents"
+  }
+}
+```
+
+```json response
+{
+  "jsonrpc": "2.0",
+  "id": 5,
+  "result": [
+    {
+      "id": "01HZQK2J3M4N5P6Q7R8S9T0UV6",
+      "name": "report.pdf",
+      "path": "/Users/alice/Documents/report.pdf",
+      "is_directory": false,
+      "kind": "document",
+      "size": 204800,
+      "extension": "pdf",
+      "created_at": "2026-01-15T10:30:00Z",
+      "modified_at": "2026-03-01T14:22:00Z",
+      "thumbnail_url": "http://127.0.0.1:52341/thumb/01HZQK2J3M4N5P6Q7R8S9T0UV6"
+    },
+    {
+      "id": "01HZQK2J3M4N5P6Q7R8S9T0UV7",
+      "name": "Archive",
+      "path": "/Users/alice/Documents/Archive",
+      "is_directory": true,
+      "kind": "directory",
+      "size": 0,
+      "extension": null,
+      "created_at": "2025-11-02T08:00:00Z",
+      "modified_at": "2026-04-10T16:45:00Z",
+      "thumbnail_url": null
+    }
+  ]
+}
+```
+
+---
+
+## query:vdfs.get_entry
+
+Returns a single VDFS entry by its ID, or `null` if the entry does not exist.
+
+### Input parameters
+
+<ParamField body="library_id" type="string" required>
+  UUIDv7 of the library that owns the entry.
+</ParamField>
+
+<ParamField body="entry_id" type="string" required>
+  UUIDv7 of the entry to retrieve.
+</ParamField>
+
+### Response fields
+
+<ResponseField name="result" type="object | null">
+  A `VdfsEntry` object, or `null` if not found. See [query:vdfs.list_entries](#queryvdfslist_entries) for the full field list.
+</ResponseField>
+
+### Example
+
+```json request
+{
+  "jsonrpc": "2.0",
+  "id": 6,
+  "method": "query:vdfs.get_entry",
+  "params": {
+    "library_id": "01HZQK2J3M4N5P6Q7R8S9T0UV1",
+    "entry_id": "01HZQK2J3M4N5P6Q7R8S9T0UV6"
+  }
+}
+```
+
+```json response
+{
+  "jsonrpc": "2.0",
+  "id": 6,
+  "result": {
+    "id": "01HZQK2J3M4N5P6Q7R8S9T0UV6",
+    "name": "report.pdf",
+    "path": "/Users/alice/Documents/report.pdf",
+    "is_directory": false,
+    "kind": "document",
+    "size": 204800,
+    "extension": "pdf",
+    "created_at": "2026-01-15T10:30:00Z",
+    "modified_at": "2026-03-01T14:22:00Z",
+    "thumbnail_url": "http://127.0.0.1:52341/thumb/01HZQK2J3M4N5P6Q7R8S9T0UV6"
+  }
+}
+```
+
+---
+
+## query:system.gpu_backend
+
+Returns the active GPU backend and the set of hardware-accelerated codecs available on the current machine.
+
+**No input parameters required.**
+
+### Response fields
+
+<ResponseField name="result" type="object">
+  A `GpuBackendResponse` object.
+  <Expandable title="GpuBackendResponse fields">
+    <ResponseField name="backend" type="string" required>
+      Active backend name: `"videotoolbox"`, `"metal"`, or `"software"`.
+    </ResponseField>
+    <ResponseField name="codecs" type="string[]" required>
+      Set of hardware-accelerated codec identifiers available. Possible values: `"h264"`, `"hevc"`, `"prores"`. Empty array when the backend is `"software"`.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+```json request
+{
+  "jsonrpc": "2.0",
+  "id": 7,
+  "method": "query:system.gpu_backend",
+  "params": {}
+}
+```
+
+```json response
+{
+  "jsonrpc": "2.0",
+  "id": 7,
+  "result": {
+    "backend": "videotoolbox",
+    "codecs": ["h264", "hevc", "prores"]
+  }
+}
+```
+
+---
+
+## query:thumbnail.endpoint
+
+Returns the base URL of the daemon's loopback HTTP server that serves thumbnail blobs. Use this URL as the base when constructing thumbnail URLs, or rely on the `thumbnail_url` field already present on each `VdfsEntry`.
+
+**No input parameters required.**
+
+### Response fields
+
+<ResponseField name="result" type="object">
+  A `ThumbnailEndpointResponse` object.
+  <Expandable title="ThumbnailEndpointResponse fields">
+    <ResponseField name="endpoint" type="string" required>
+      Loopback HTTP base URL for the thumbnail server (e.g. `"http://127.0.0.1:52341"`). The port is chosen dynamically at daemon startup.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+```json request
+{
+  "jsonrpc": "2.0",
+  "id": 8,
+  "method": "query:thumbnail.endpoint",
+  "params": {}
+}
+```
+
+```json response
+{
+  "jsonrpc": "2.0",
+  "id": 8,
+  "result": {
+    "endpoint": "http://127.0.0.1:52341"
+  }
+}
+```
+
+<Info>
+The thumbnail endpoint changes each time the daemon restarts. Do not cache the port across sessions — call this method at the start of each connection.
+</Info>

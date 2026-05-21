@@ -1,0 +1,68 @@
+---
+title: "Grant required macOS Tahoe permissions to Spacedrive"
+description: "Spacedrive requires Full Disk Access to index protected folders on macOS Tahoe. Learn which permissions it needs and how to grant each one."
+---
+
+Spacedrive is a file manager, so it needs broader filesystem access than most apps. macOS requires you to explicitly grant these permissions the first time you use certain features. This page explains what each permission does, why Spacedrive needs it, and how to grant it if you skipped the prompt at launch.
+
+## Full Disk Access
+
+Full Disk Access is required. Without it, macOS blocks Spacedrive from reading protected folders, and those locations will fail to index.
+
+Folders that require Full Disk Access include:
+
+- Desktop, Documents, and Downloads
+- iCloud Drive (`~/Library/Mobile Documents/`)
+- Other cloud storage mounts in `~/Library/CloudStorage/` (Google Drive, OneDrive, Dropbox)
+- External drives and volumes
+- Any folder owned by another user account
+
+<Warning>
+  If Spacedrive does not have Full Disk Access, attempting to index a protected location will fail with a "Permission denied" error. The location will appear in your sidebar but no files will be indexed until you grant the permission and re-index.
+</Warning>
+
+<Steps>
+  <Step title="Open Privacy & Security settings">
+    Choose Apple menu > **System Settings**, then click **Privacy & Security** in the sidebar.
+  </Step>
+  <Step title="Go to Full Disk Access">
+    Scroll down and click **Full Disk Access**.
+  </Step>
+  <Step title="Enable Spacedrive">
+    Find **Spacedrive** in the list and toggle it **on**. If Spacedrive is not listed, click the **+** button, navigate to your Applications folder, and select **Spacedrive.app**.
+  </Step>
+  <Step title="Restart Spacedrive">
+    macOS may prompt you to quit and reopen Spacedrive for the change to take effect. Click **Quit & Reopen** if prompted, or quit and relaunch Spacedrive manually.
+  </Step>
+</Steps>
+
+## Network access
+
+Network access is required for cloud storage connections (S3, Google Drive, OneDrive, Dropbox, WebDAV). Spacedrive requests this permission automatically on first launch. If you declined the prompt, you can re-enable it in **System Settings > Privacy & Security > Local Network** — though for outbound internet connections, macOS manages this automatically through the app's entitlements and you should not need to take any action.
+
+## Keychain access
+
+Spacedrive stores credentials for cloud storage connections in the macOS Keychain — the same secure store that Safari and other apps use for passwords. When Spacedrive first connects to a cloud service, macOS shows a prompt:
+
+> **"Spacedrive" wants to use your confidential information stored in "[credential name]" in your keychain.**
+
+Click **Always Allow** so Spacedrive can access the credential on subsequent launches without prompting you each time. Clicking **Allow** grants access only for the current session and the prompt will appear again next time.
+
+<Note>
+  Keychain credentials are stored locally on your Mac and are encrypted by macOS. Spacedrive never transmits your cloud credentials off your device.
+</Note>
+
+## Extensions and the App Group container
+
+Spacedrive's Finder Sync extension, Quick Look preview extension, and Quick Look thumbnail extension all run as separate sandboxed processes. They communicate with the Spacedrive daemon through a secure shared container called an App Group (`group.com.spacedrive.main`).
+
+You do not need to grant any additional permissions for these extensions — the App Group is established automatically when you install Spacedrive, and each extension is already authorized to share the container as part of the app's code signature.
+
+<CardGroup cols={2}>
+  <Card title="Locations" href="/guides/locations">
+    Add local and cloud locations after granting Full Disk Access.
+  </Card>
+  <Card title="Common issues" href="/troubleshooting/common-issues">
+    Troubleshoot indexing errors and permission-related problems.
+  </Card>
+</CardGroup>

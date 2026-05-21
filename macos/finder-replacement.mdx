@@ -1,0 +1,83 @@
+---
+title: "Set Spacedrive as the default folder handler on macOS"
+description: "Replace Finder as your default folder opener on macOS Tahoe. Double-clicking any folder, Dock shortcut, or path link opens Spacedrive."
+---
+
+When you set Spacedrive as your default folder handler, double-clicking a folder on your Desktop, clicking a folder in the Dock, or following a folder link in another app all open Spacedrive instead of Finder. Finder.app remains installed — macOS requires it — but you stop reaching for it during everyday file management.
+
+## What "default folder handler" means
+
+macOS routes folder-open events through a registered content-type handler for `public.folder` and `public.directory`. By default that handler is Finder. Spacedrive declares itself as the owner of those types and, once you confirm the change, macOS redirects all folder-open events to Spacedrive instead.
+
+This affects:
+
+- Double-clicking a folder anywhere in macOS
+- Clicking a folder shortcut in the Dock or on your Desktop
+- "Show in Folder" actions from apps like Safari, Mail, and the App Store
+
+It does **not** affect Open/Save panels inside other apps — those always show the system file picker.
+
+## Set Spacedrive as the default
+
+macOS 26.4 introduced a dedicated setting for this. After you change it, a system confirmation dialog asks you to confirm the switch.
+
+<Steps>
+  <Step title="Open System Settings">
+    Choose Apple menu > **System Settings**, then click **Desktop & Dock** in the sidebar.
+  </Step>
+  <Step title="Change the default file manager">
+    Scroll to the **Default file manager** pop-up menu and select **Spacedrive**.
+  </Step>
+  <Step title="Confirm the change">
+    A dialog appears asking "Change default folder opener to Spacedrive?" Click **Use Spacedrive** to confirm. The change takes effect immediately — no restart required.
+  </Step>
+</Steps>
+
+<Note>
+  Finder.app remains installed and fully functional. macOS will not remove or disable it. You can still open Finder at any time from the Dock, from Spotlight, or by pressing Shift-Command-F in most apps.
+</Note>
+
+## What still opens in Finder
+
+A few macOS surfaces always use Finder regardless of your default folder handler:
+
+- The Open/Save panel inside any app
+- AirDrop (Finder owns the AirDrop window)
+- iCloud Drive's "Browse" button in some Apple apps
+- Network volumes accessed through the **Go > Connect to Server** dialog
+
+For everything else — your home folder, external drives, project directories — Spacedrive takes over.
+
+## Services menu actions
+
+Once Spacedrive is installed, two actions appear in the right-click Services menu for files and folders throughout macOS:
+
+- **Index with Spacedrive** — adds the selected item to your Spacedrive library immediately
+- **Reveal in Spacedrive Library** — opens Spacedrive and highlights the file or folder in its library view
+
+You can access these by right-clicking (or Control-clicking) any file or folder in Finder, on the Desktop, or in most apps, then choosing **Services** from the contextual menu.
+
+## Revert to Finder
+
+To switch back to Finder at any time:
+
+<Steps>
+  <Step title="Open System Settings">
+    Choose Apple menu > **System Settings**, then click **Desktop & Dock**.
+  </Step>
+  <Step title="Restore Finder">
+    Open the **Default file manager** pop-up menu and select **Finder**.
+  </Step>
+  <Step title="Confirm">
+    Click **Use Finder** in the confirmation dialog. Folders will open in Finder again immediately.
+  </Step>
+</Steps>
+
+<CardGroup cols={2}>
+  <Card title="Locations" icon="folder-plus" href="/guides/locations">
+    Add your drives and cloud storage as Spacedrive locations.
+  </Card>
+  <Card title="Browsing files" icon="grid" href="/guides/browsing">
+    Learn how to navigate and manage files in Spacedrive.
+  </Card>
+</CardGroup>

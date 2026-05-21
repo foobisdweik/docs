@@ -1,0 +1,55 @@
+---
+title: "Spacedrive: local-first file manager for macOS Tahoe"
+description: "Spacedrive is a Finder replacement for macOS Tahoe. Manage local disks and cloud storage in one app — no cloud sign-up required."
+---
+
+Spacedrive is a macOS Tahoe (26.5+) file manager built to replace Finder as your daily driver. It handles local disks, external drives, and cloud buckets — S3, Google Drive, OneDrive, Dropbox, WebDAV — through a single unified interface. All your data stays local: no accounts, no telemetry, no sync fees.
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Download and install Spacedrive on macOS Tahoe (26.5+).
+  </Card>
+  <Card title="Quick Start" icon="bolt" href="/quickstart">
+    Create your first library and start browsing in minutes.
+  </Card>
+  <Card title="Cloud Storage" icon="cloud" href="/guides/cloud-storage">
+    Connect S3, Google Drive, OneDrive, Dropbox, and WebDAV locations.
+  </Card>
+  <Card title="IPC Reference" icon="code" href="/ipc/overview">
+    JSON-RPC 2.0 protocol for scripting and automation.
+  </Card>
+</CardGroup>
+
+## Get up and running
+
+<Steps>
+  <Step title="Install Spacedrive">
+    Download the `.dmg` from the releases page, open it, and drag **Spacedrive.app** to your Applications folder. macOS Tahoe 26.5 or later is required.
+  </Step>
+  <Step title="Grant permissions">
+    On first launch, Spacedrive will ask for **Full Disk Access**. Open **System Settings → Privacy & Security → Full Disk Access** and enable Spacedrive. Without this, some folders will not be indexed.
+  </Step>
+  <Step title="Create a library">
+    A library is where Spacedrive stores its index. Click **New Library** in the sidebar, give it a name, and choose a folder to save it in.
+  </Step>
+  <Step title="Add locations">
+    Add local folders or cloud buckets to your library. Spacedrive indexes them in the background and generates thumbnails automatically.
+  </Step>
+</Steps>
+
+## Why Spacedrive?
+
+<CardGroup cols={2}>
+  <Card title="Local-first" icon="hard-drive">
+    Your index lives in an SQLite database on your Mac. No cloud account needed to use any core feature.
+  </Card>
+  <Card title="Cloud-aware" icon="cloud-arrow-up">
+    Auto-detects iCloud, Google Drive, OneDrive, and Dropbox mounts. Connect any S3-compatible bucket with a key pair.
+  </Card>
+  <Card title="Finder integration" icon="apple">
+    Deep macOS integration: Finder Sync overlays, Quick Look previews, Core Spotlight search, Services menu, and default folder handler.
+  </Card>
+  <Card title="GPU thumbnails" icon="image">
+    VideoToolbox and Metal-accelerated thumbnail pipeline. HEIC, ProRes, H.264, HEVC — all rendered fast, with a software fallback.
+  </Card>
+</CardGroup>

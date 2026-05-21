@@ -1,0 +1,54 @@
+---
+title: "Spacedrive frequently asked questions — FAQ guide"
+description: "Answers to common Spacedrive questions: macOS requirements, cloud storage setup, Finder coexistence, library backups, and local-first privacy."
+---
+
+Below you will find answers to the questions that come up most often. If something isn't covered here, check [Common issues](/troubleshooting/common-issues) for step-by-step fixes.
+
+<AccordionGroup>
+
+  <Accordion title="Does Spacedrive replace Finder completely?">
+    No. Finder stays installed and macOS requires it to remain present. What Spacedrive does is register itself as your default folder opener, so double-clicking a folder or following a path from another app opens Spacedrive instead of Finder. You can still open Finder directly from the Dock or with **⌥⌘Space** whenever you need it — the two apps coexist without conflict.
+  </Accordion>
+
+  <Accordion title="What macOS version do I need?">
+    Spacedrive requires **macOS Tahoe 26.5 or later** on **Apple Silicon**. Intel Macs are not supported. There are no plans to support older macOS versions or non-Apple Silicon hardware.
+  </Accordion>
+
+  <Accordion title="Is there a Windows or Linux version?">
+    No. Spacedrive is macOS-only and there are no plans to support Windows or Linux. The app is built specifically for macOS Tahoe and Apple Silicon — it uses VideoToolbox, Metal, FSEvents, Core Spotlight, Finder Sync Extensions, and other macOS-native APIs that have no direct equivalent on other platforms.
+  </Accordion>
+
+  <Accordion title="Does Spacedrive upload my files?">
+    No. Spacedrive is local-first: your files never leave your Mac unless you explicitly add a cloud location (such as an S3 bucket or Google Drive). The app collects no telemetry, sends no crash reports, and requires no account to use. The only network activity is traffic you initiate through a cloud location you configure yourself.
+  </Accordion>
+
+  <Accordion title="Can I use Spacedrive without Full Disk Access?">
+    Yes. Spacedrive will open and work for any folder it has permission to read. However, without Full Disk Access, protected directories — including `~/Library`, `/private`, and some third-party app containers — will not be indexed. You will see a prompt to grant Full Disk Access when you first add a location that requires it. See [macOS permissions](/macos/permissions) for step-by-step instructions.
+  </Accordion>
+
+  <Accordion title="How do I back up my library?">
+    Copy the `.sdlibrary` file to a safe location. The library file holds the index — file paths, metadata, thumbnails, and search data — but not the original files themselves. Backing up your library does not back up the files it points to; those remain wherever they are on disk or in the cloud. To find the library file path, choose **File → Show Library in Finder**.
+  </Accordion>
+
+  <Accordion title="What happens to my files if I delete a library?">
+    Nothing. Deleting a library removes the index Spacedrive built — it does not delete, move, or modify any of the files the library was pointing to. Your files stay exactly where they are on disk or in the cloud. You can recreate the library at any time by adding the same locations again; Spacedrive will re-index them.
+  </Accordion>
+
+  <Accordion title="How do I connect an S3 bucket?">
+    See [Cloud storage](/guides/cloud-storage) for a complete walkthrough of adding an S3 bucket as a location, including the required IAM permissions (`s3:GetObject` and `s3:ListBucket` at minimum).
+  </Accordion>
+
+  <Accordion title="Does Spacedrive work with iCloud Drive?">
+    Yes. Spacedrive automatically detects iCloud Drive from `~/Library/Mobile Documents` and offers it as a location you can add. Files that iCloud has evicted to the cloud (shown with a download icon in Finder) are indexed by name and metadata; their content is fetched on demand when you open or preview them.
+  </Accordion>
+
+  <Accordion title="Is there mobile support?">
+    No. Spacedrive is a desktop application only. There is no iOS or Android app and no plans to build one. The app is designed specifically for the macOS desktop experience.
+  </Accordion>
+
+  <Accordion title="What GPU is required?">
+    No GPU is required. Spacedrive performs a runtime probe at startup and selects the best available backend: VideoToolbox hardware acceleration, then Metal, then a pure software fallback. The software fallback is always present, so the app runs correctly even without dedicated GPU hardware or on machines where the GPU probe fails. You can see which backend is active in **Settings → System → GPU Backend**.
+  </Accordion>
+
+</AccordionGroup>

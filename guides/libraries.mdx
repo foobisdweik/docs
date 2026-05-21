@@ -1,0 +1,90 @@
+---
+title: "Create, open, and manage your Spacedrive libraries"
+description: "A Spacedrive library stores the file index for all your locations. Learn how to create, open, back up, and delete libraries on macOS Tahoe."
+---
+
+A library is the core unit of organization in Spacedrive. Everything you index lives inside one — your locations, file metadata, thumbnails, and search data are all stored in a single `.sdlibrary` file on your Mac. Think of it as the catalog for a specific collection of files, completely separate from the files themselves.
+
+## What is a library?
+
+Under the hood, a library is an SQLite database file with the `.sdlibrary` extension. It holds the index of every file Spacedrive has scanned across all your added locations: names, paths, sizes, dates, thumbnails, and metadata. The original files stay exactly where they are — Spacedrive never moves or copies them.
+
+Because a library is just a file, you can keep it anywhere on your Mac, back it up like any other document, or share it between user accounts on the same machine.
+
+**One library per use case** is the recommended approach. For example, you might keep a "Work" library for your project folders and a separate "Media" library for your photo and video archive. Libraries do not share data with each other, so switching between them gives you a clean, focused view.
+
+## Create a library
+
+<Steps>
+  <Step title="Open the library picker">
+    Launch Spacedrive. If no library is open, the library picker appears automatically. You can also open it at any time from the **File** menu → **Libraries**.
+  </Step>
+  <Step title="Click New Library">
+    Click the **New Library** button in the library picker.
+  </Step>
+  <Step title="Name your library">
+    Type a name for the library — for example, "Work" or "Photos 2024".
+  </Step>
+  <Step title="Choose a save location">
+    Click **Choose…** to pick where the `.sdlibrary` file will be saved. Your home folder or an external drive both work fine.
+  </Step>
+  <Step title="Create">
+    Click **Create**. Spacedrive opens the new library immediately. It will be empty until you add locations.
+  </Step>
+</Steps>
+
+## Open an existing library
+
+If you already have a `.sdlibrary` file — for example, copied from a backup or another machine — you can open it directly:
+
+<Steps>
+  <Step title="Open the library picker">
+    Go to **File** → **Libraries** or launch Spacedrive without a library open.
+  </Step>
+  <Step title="Click Open Library">
+    Click **Open Library…** and navigate to the `.sdlibrary` file on disk.
+  </Step>
+  <Step title="Select and open">
+    Select the file and click **Open**. Spacedrive loads the library and displays all previously indexed locations.
+  </Step>
+</Steps>
+
+## Where is the library file stored?
+
+When you create a library, you choose exactly where the `.sdlibrary` file lives. Spacedrive does not enforce a specific location. If you accepted the default during setup, look in:
+
+```text
+~/Library/Application Support/spacedrive/
+```
+
+You can move the file to a different folder and re-open it from its new location at any time.
+
+## Delete a library
+
+Deleting a library removes the index file and all metadata Spacedrive has collected. It does **not** touch the original files on disk.
+
+<Note>
+  Deleting a library only removes Spacedrive's index. Your actual files — photos, documents, videos — are never affected. You can always re-create a library and re-index the same folders.
+</Note>
+
+To delete a library:
+
+<Steps>
+  <Step title="Open the library picker">
+    Go to **File** → **Libraries**.
+  </Step>
+  <Step title="Right-click the library">
+    Right-click (or Control-click) the library you want to remove and choose **Delete Library**.
+  </Step>
+  <Step title="Confirm">
+    Confirm the action in the dialog. Spacedrive deletes the `.sdlibrary` file and closes it if it was open.
+  </Step>
+</Steps>
+
+## Library encryption
+
+Spacedrive is designed with local-first privacy in mind. Full library encryption using SQLCipher — an encrypted variant of SQLite — is coming in a future release. When enabled, the library database will be encrypted at rest, and you will need a passphrase to open it. Credential management will use the macOS Keychain so the passphrase is never stored in plain text.
+
+<Info>
+  SQLCipher encryption is not yet available. For now, protect sensitive libraries by storing the `.sdlibrary` file in an encrypted disk image or a FileVault-protected volume.
+</Info>

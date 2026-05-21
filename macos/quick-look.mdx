@@ -1,0 +1,61 @@
+---
+title: "Preview files using macOS Quick Look in Spacedrive"
+description: "Press Space in Spacedrive to preview images, videos, and documents using macOS Quick Look without opening an external application."
+---
+
+Quick Look lets you glance at the contents of a file without opening it in a separate application. In Spacedrive, Quick Look works exactly as it does in Finder: select a file and press the Space bar to see a full-size preview, then dismiss it with another keypress when you're done.
+
+## How to trigger Quick Look
+
+Select any file in Spacedrive — in grid view, list view, or the media viewer — and press **Space**. The Quick Look panel opens immediately. Press **Space** again or press **Escape** to close it.
+
+You can also open Quick Look from the right-click menu by choosing **Quick Look** on any selected file.
+
+## Supported file types
+
+Spacedrive passes files to the macOS Quick Look engine, which handles a wide range of formats natively:
+
+- **Images** — JPEG, PNG, HEIC, WebP, TIFF, GIF, and most other common image formats
+- **Video** — H.264, HEVC (H.265), and ProRes (requires macOS codec support)
+- **Documents** — PDF, plain text (`.txt`), Markdown, and most common code file types (`.swift`, `.py`, `.js`, `.ts`, `.rs`, etc.)
+
+For file types that macOS doesn't support natively, Spacedrive falls back to displaying the file's name, kind, and size.
+
+## Preview multiple files
+
+You can preview several files one after another without closing and reopening Quick Look:
+
+1. Select multiple files (click the first, then Shift-click or Command-click to add more).
+2. Press **Space** to open Quick Look on the selection.
+3. Use the **left and right arrow keys** to step through each file in the preview panel.
+
+A counter in the top corner of the panel shows your position within the selection (for example, "3 of 12").
+
+## Quick Look extensions
+
+Spacedrive installs two Quick Look extensions alongside the main app:
+
+**Preview extension** (`SpacedriveQLPreview.appex`) — files that Spacedrive has indexed can be previewed from Finder too, not just from within Spacedrive. If you use Finder to navigate and press Space on a file Spacedrive knows about, Spacedrive's preview extension renders the preview.
+
+**Thumbnail extension** (`SpacedriveQLThumbnail.appex`) — Spacedrive generates thumbnail mosaics for its library folders. In Finder, these folders display a small grid of their contents as the folder icon, giving you a visual summary at a glance.
+
+Both extensions communicate with the Spacedrive daemon through a shared App Group container — no additional permissions or setup are required on your part.
+
+<Tip>
+  If thumbnails or previews look out of date after adding new files, try re-indexing the location. In Spacedrive, right-click the location in the sidebar and choose **Re-index location**.
+</Tip>
+
+## Closing Quick Look
+
+- Press **Space** — closes Quick Look and returns focus to Spacedrive
+- Press **Escape** — also closes Quick Look
+- Click anywhere outside the Quick Look panel — closes it on a single-file preview (multi-file previews require a keypress)
+
+<CardGroup cols={2}>
+  <Card title="Browsing files" href="/guides/browsing">
+    Navigate and manage your files in Spacedrive.
+  </Card>
+  <Card title="Find files with Spotlight" href="/macos/spotlight">
+    Search your Spacedrive library from macOS Spotlight.
+  </Card>
+</CardGroup>

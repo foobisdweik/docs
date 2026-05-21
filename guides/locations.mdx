@@ -1,0 +1,84 @@
+---
+title: "Add and manage indexed file locations in Spacedrive"
+description: "Locations are folders and cloud buckets Spacedrive indexes. Add local directories or cloud storage to start browsing and searching your files."
+---
+
+A location is any folder or cloud bucket that you tell Spacedrive to index. Once you add a location, Spacedrive scans it in the background and adds every file it finds to your library's index — making those files searchable, previewable, and visible in Spacedrive's file browser. Your original files are never moved or modified.
+
+## What is a location?
+
+A location is a root folder or cloud storage bucket that Spacedrive tracks. It can be a local directory — like your `~/Documents` folder or an external drive — or a cloud bucket connected through a provider like S3 or Google Drive. For details on adding cloud storage, see [Connect cloud storage to Spacedrive](/guides/cloud-storage).
+
+Spacedrive can hold multiple locations at once inside a single library. Each location is indexed independently, so you can add, remove, or re-scan them without affecting the others.
+
+## Add a local folder location
+
+You can add a local folder in two ways:
+
+**Drag and drop:** Drag any folder from Finder into the Spacedrive sidebar. Spacedrive immediately registers it as a new location and starts indexing.
+
+**Add Location button:**
+
+<Steps>
+  <Step title="Open the sidebar menu">
+    Click the **+** button next to **Locations** in the left sidebar, or go to **File** → **Add Location**.
+  </Step>
+  <Step title="Select a folder">
+    In the file picker that appears, navigate to the folder you want to index and click **Add**.
+  </Step>
+  <Step title="Wait for indexing">
+    Spacedrive starts indexing immediately. You can watch progress in the Jobs panel (see below).
+  </Step>
+</Steps>
+
+## Add a cloud location
+
+Adding cloud storage works the same way as adding a local folder — you choose the provider and enter your credentials once, and Spacedrive treats the cloud bucket as a first-class location. For step-by-step instructions for each provider, see [Connect cloud storage to Spacedrive](/guides/cloud-storage).
+
+## Indexing: what happens after you add a location
+
+After you add a location, Spacedrive kicks off a background indexing job. This job walks the folder tree, reads file metadata, and generates thumbnails. You can monitor it in the **Jobs** panel, which shows a progress bar and the current file being processed.
+
+Indexing time depends on the size of the folder and whether thumbnail generation is needed. For large collections the initial scan may take several minutes. Spacedrive continues indexing in the background while you use the app normally.
+
+Once indexing completes, all files appear in Spacedrive's browser and in search results.
+
+## Re-index a location
+
+If you add, remove, or move files outside Spacedrive, the index may become stale. To trigger a fresh scan:
+
+<Steps>
+  <Step title="Right-click the location">
+    In the sidebar, right-click (or Control-click) the location you want to update.
+  </Step>
+  <Step title="Choose Re-index">
+    Select **Re-index Location** from the context menu.
+  </Step>
+  <Step title="Monitor progress">
+    The Jobs panel shows the re-index job as it runs. New and changed files appear in the browser once the job finishes.
+  </Step>
+</Steps>
+
+Spacedrive also watches for file-system changes automatically using macOS FSEvents, so most additions and deletions are picked up in real time without a manual re-index.
+
+## Remove a location
+
+Removing a location tells Spacedrive to stop tracking it and deletes its entries from the library index. Your actual files are left untouched.
+
+<Warning>
+  Removing a location does not delete the files inside it. Only the index entries in your Spacedrive library are removed. Your files remain exactly where they are on disk or in the cloud.
+</Warning>
+
+To remove a location:
+
+<Steps>
+  <Step title="Right-click the location">
+    In the sidebar, right-click (or Control-click) the location you want to remove.
+  </Step>
+  <Step title="Choose Remove Location">
+    Select **Remove Location**. Spacedrive asks you to confirm.
+  </Step>
+  <Step title="Confirm">
+    Click **Remove**. Spacedrive removes the location and all its index entries from the library. The original files on disk are not affected.
+  </Step>
+</Steps>

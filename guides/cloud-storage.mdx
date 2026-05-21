@@ -1,0 +1,126 @@
+---
+title: "Connect S3, Google Drive, and cloud storage locations"
+description: "Connect S3, Google Drive, OneDrive, Dropbox, and WebDAV as Spacedrive locations. Browse and manage cloud files alongside local folders."
+---
+
+Spacedrive treats cloud storage the same way it treats local folders — as indexed locations inside your library. Once you connect a cloud bucket or drive, you can browse, search, preview, and open files in it without switching to a separate app or web browser.
+
+## Supported providers
+
+Spacedrive currently supports the following cloud storage providers:
+
+- **S3-compatible storage** — Amazon S3, Backblaze B2-compatible endpoints, MinIO, and any service that implements the S3 API
+- **Google Drive** — via OAuth2 sign-in
+- **OneDrive** — via OAuth2 sign-in
+- **Dropbox** — via OAuth2 sign-in
+- **WebDAV** — any server that supports the WebDAV protocol
+
+## Auto-detected cloud mounts
+
+If you already use the desktop sync apps for Google Drive, OneDrive, or Dropbox, Spacedrive can detect them automatically. These apps mount your cloud files under:
+
+- `~/Library/CloudStorage/` — Google Drive, OneDrive, and Dropbox desktop clients
+- `~/Library/Mobile Documents/` — iCloud Drive
+
+When Spacedrive starts, it scans both of these paths. Any cloud mounts it finds appear in the **Add Location** list as suggested locations. Adding them works the same as adding a local folder — no credentials required, because the desktop sync app handles authentication.
+
+<Note>
+  Credentials for manual cloud connections (S3 keys, OAuth tokens, WebDAV passwords) are stored in the macOS Keychain, not inside your library database. Spacedrive never writes cloud credentials to the `.sdlibrary` file.
+</Note>
+
+## Manual cloud connection
+
+To connect a cloud provider that is not auto-detected:
+
+<Steps>
+  <Step title="Open Add Location">
+    Click the **+** button next to **Locations** in the sidebar, or go to **File** → **Add Location**.
+  </Step>
+  <Step title="Switch to the Cloud tab">
+    In the location picker, click the **Cloud** tab.
+  </Step>
+  <Step title="Select your provider">
+    Choose your provider from the list and follow the steps for that provider below.
+  </Step>
+</Steps>
+
+## Provider setup
+
+<Tabs>
+  <Tab title="S3">
+    Spacedrive connects to any S3-compatible endpoint using an access key and secret key.
+
+    <Steps>
+      <Step title="Select S3">
+        In the Cloud tab of the location picker, choose **S3-compatible**.
+      </Step>
+      <Step title="Enter bucket details">
+        Fill in the following fields:
+
+        | Field | Description |
+        |---|---|
+        | **Bucket name** | The name of the S3 bucket, e.g. `my-archive` |
+        | **Region** | The AWS region or custom region string, e.g. `us-east-1` |
+        | **Endpoint URL** | Leave blank for AWS. Enter a custom URL for MinIO or other S3-compatible services |
+        | **Access key ID** | Your IAM access key |
+        | **Secret access key** | Your IAM secret key |
+      </Step>
+      <Step title="Connect">
+        Click **Connect**. Spacedrive verifies the credentials against the bucket, saves them to the macOS Keychain, and adds the bucket as a location. Indexing starts immediately.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Google Drive / OneDrive / Dropbox">
+    Google Drive, OneDrive, and Dropbox use OAuth2 sign-in, so you never paste credentials into Spacedrive directly.
+
+    <Steps>
+      <Step title="Select your provider">
+        In the Cloud tab, choose **Google Drive**, **OneDrive**, or **Dropbox**.
+      </Step>
+      <Step title="Sign in">
+        Click **Sign in with [Provider]**. Spacedrive opens your default browser to the provider's OAuth2 authorization page.
+      </Step>
+      <Step title="Authorize Spacedrive">
+        Sign in with your account and grant Spacedrive the requested permissions. The browser redirects back to Spacedrive automatically.
+      </Step>
+      <Step title="Choose a folder (optional)">
+        By default, Spacedrive indexes the root of your drive. If you want to index only a specific subfolder, select it before confirming.
+      </Step>
+      <Step title="Connect">
+        Click **Add Location**. The OAuth token is saved to your macOS Keychain and indexing begins.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="WebDAV">
+    WebDAV works with Nextcloud, ownCloud, Synology, and any other server that exposes a WebDAV endpoint.
+
+    <Steps>
+      <Step title="Select WebDAV">
+        In the Cloud tab, choose **WebDAV**.
+      </Step>
+      <Step title="Enter server details">
+        Fill in the following fields:
+
+        | Field | Description |
+        |---|---|
+        | **Server URL** | Full WebDAV URL, e.g. `https://nextcloud.example.com/remote.php/dav/files/username/` |
+        | **Username** | Your account username |
+        | **Password** | Your account password |
+      </Step>
+      <Step title="Connect">
+        Click **Connect**. Spacedrive tests the connection, saves the password to the macOS Keychain, and adds the WebDAV share as a location.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Reading and writing cloud files
+
+Cloud locations support both reading and writing. You can open a file in a cloud location and save changes back to it just like a local file — Spacedrive passes reads and writes through to the underlying provider.
+
+The current write behavior is **last-writer-wins**: if you and another device modify the same file at the same time, the most recent write takes precedence. Spacedrive does not yet show a conflict resolution UI when this happens.
+
+## Current limitations
+
+- **No conflict resolution UI.** Simultaneous edits from multiple devices result in last-writer-wins. A conflict interface is planned for a future release.
+- **No File Provider extension.** The macOS File Provider extension, which enables on-demand downloading and Finder integration for cloud files, is not yet available. Cloud locations are fully downloaded into the index rather than streamed on demand.

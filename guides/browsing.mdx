@@ -1,0 +1,71 @@
+---
+title: "Navigate and manage files in the Spacedrive browser"
+description: "Navigate your indexed libraries with grid and list views, preview files with Quick Look, and use the context menu for common file actions."
+---
+
+Once you have a library with at least one indexed location, you can browse all your files directly in Spacedrive — without switching to Finder. The file browser supports multiple view modes, keyboard-driven navigation, Quick Look previews, and a context menu that covers the most common file operations.
+
+## Grid view and list view
+
+Spacedrive offers two main view modes, toggled from the toolbar at the top of the file browser:
+
+- **Grid view** shows files as thumbnail tiles. This is the best choice for photo and video collections where you want to see the content at a glance.
+- **List view** shows files as rows with columns for name, size, kind, and date modified. Use it when you need to sort by metadata or work with a large number of files.
+
+Click the grid or list icon in the toolbar to switch between them at any time. Your preference is saved per location.
+
+## Navigating the folder hierarchy
+
+Click any folder to open it. The toolbar shows a **breadcrumb trail** — for example, `Home › Projects › 2024` — so you always know where you are. Click any segment of the breadcrumb to jump up to that level.
+
+Use the **back** and **forward** arrow buttons in the toolbar to retrace your navigation history, the same way you would in a web browser.
+
+## Selecting files
+
+| Action | Result |
+|---|---|
+| Click a file | Select that file |
+| Shift+click | Select a contiguous range from the last-selected file to the clicked file |
+| Cmd+click | Add or remove individual files from the current selection |
+| Cmd+A | Select all files in the current folder |
+
+## Opening files
+
+Double-click any file to open it with its default macOS application — the same app that would open if you double-clicked the file in Finder.
+
+## Quick Look preview
+
+Press **Space** with one or more files selected to open a Quick Look preview. Spacedrive uses macOS's native Quick Look engine, so it supports the same formats you can preview in Finder, plus any Quick Look plugins you have installed.
+
+Press **Space** again, or press **Escape**, to close the preview.
+
+For more about Quick Look integration, see [Quick Look in Spacedrive](/macos/quick-look).
+
+## Context menu actions
+
+Right-click (or Control-click) any file to open the context menu. Available actions include:
+
+| Action | What it does |
+|---|---|
+| **Open** | Opens the file with its default application |
+| **Reveal in Finder** | Opens a Finder window with the file selected |
+| **Move to Trash** | Moves the file to the macOS Trash |
+| **Share** | Opens the macOS Share sheet |
+| **Copy** | Copies the file to the clipboard |
+| **Get Info** | Shows file metadata: size, path, dates, kind |
+
+## Thumbnail generation
+
+Spacedrive generates thumbnails using a GPU-accelerated pipeline powered by VideoToolbox and Metal. Thumbnails are produced in the background as part of the indexing job. While a thumbnail is being generated, the file tile shows a small progress badge. Once generation is complete, the thumbnail appears automatically — no reload needed.
+
+The GPU pipeline includes an automatic software fallback, so thumbnails are generated even on systems where hardware acceleration is unavailable.
+
+### Supported formats for thumbnails and previews
+
+**Images:** JPEG, PNG, HEIC, WebP
+
+**Video:** H.264, HEVC (H.265), Apple ProRes
+
+**RAW photos:** Common RAW formats supported by macOS (such as `.arw`, `.cr2`, `.cr3`, `.nef`, `.dng`)
+
+Files in other formats display a generic file-type icon instead of a thumbnail.

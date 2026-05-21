@@ -1,0 +1,234 @@
+---
+title: "Spacedrive IPC action methods — complete reference"
+description: "JSON-RPC mutation methods for creating libraries, adding locations, and starting or cancelling indexing jobs in Spacedrive's daemon API."
+---
+
+Action methods mutate daemon state. Send them as standard JSON-RPC 2.0 requests; on success the `result` field contains the method's output. All UUIDs are UUIDv7 strings. All paths are strings.
+
+<Warning>
+Actions modify the daemon's SQLite database. Ensure you have the correct `library_id` or `location_id` before calling mutation methods — there is no undo endpoint.
+</Warning>
+
+---
+
+## action:library.create
+
+Creates a new `.sdlibrary` and returns its summary.
+
+### Input parameters
+
+<ParamField body="name" type="string" required>
+  Human-readable name for the new library.
+</ParamField>
+
+### Response fields
+
+<ResponseField name="result" type="object">
+  A `LibrarySummary` object for the newly created library.
+  <Expandable title="LibrarySummary fields">
+    <ResponseField name="id" type="string" required>
+      UUIDv7 identifier for the library.
+    </ResponseField>
+    <ResponseField name="name" type="string" required>
+      The name you provided.
+    </ResponseField>
+    <ResponseField name="path" type="string" required>
+      Absolute path to the `.sdlibrary` directory on disk.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+```json request
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "action:library.create",
+  "params": {
+    "name": "Work Projects"
+  }
+}
+```
+
+```json response
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "id": "01HZQK2J3M4N5P6Q7R8S9T0UV1",
+    "name": "Work Projects",
+    "path": "/Users/alice/Library/Application Support/spacedrive/libraries/work-projects.sdlibrary"
+  }
+}
+```
+
+---
+
+## action:location.add
+
+Adds a folder to a library as an indexed location. The daemon will begin watching the folder for changes once the location is added.
+
+### Input parameters
+
+<ParamField body="library_id" type="string" required>
+  UUIDv7 of the library to add the location to.
+</ParamField>
+
+<ParamField body="path" type="string" required>
+  Absolute path to the folder you want to index.
+</ParamField>
+
+### Response fields
+
+<ResponseField name="result" type="object">
+  A `LocationSummary` object for the newly added location.
+  <Expandable title="LocationSummary fields">
+    <ResponseField name="id" type="string" required>
+      UUIDv7 identifier for the location.
+    </ResponseField>
+    <ResponseField name="library_id" type="string" required>
+      UUIDv7 of the library this location belongs to.
+    </ResponseField>
+    <ResponseField name="path" type="string" required>
+      Absolute path to the indexed folder.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+```json request
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": "action:location.add",
+  "params": {
+    "library_id": "01HZQK2J3M4N5P6Q7R8S9T0UV1",
+    "path": "/Users/alice/Documents/Work"
+  }
+}
+```
+
+```json response
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "result": {
+    "id": "01HZQK2J3M4N5P6Q7R8S9T0UV3",
+    "library_id": "01HZQK2J3M4N5P6Q7R8S9T0UV1",
+    "path": "/Users/alice/Documents/Work"
+  }
+}
+```
+
+---
+
+## action:job.start_indexer
+
+Starts an indexing job for a location. Returns a job ID you can use to track progress via `query:job.list` or the `event:job.progress` server-push event.
+
+<Note>
+The `mode` parameter controls how much of the location is scanned. Use `"full"` to re-scan every file from scratch — useful after a large external change or to rebuild metadata. Use `"incremental"` to process only files that have changed since the last index run — much faster for routine updates.
+</Note>
+
+### Input parameters
+
+<ParamField body="library_id" type="string" required>
+  UUIDv7 of the library that owns the location.
+</ParamField>
+
+<ParamField body="location_id" type="string" required>
+  UUIDv7 of the location to index.
+</ParamField>
+
+<ParamField body="mode" type="string" required>
+  Indexing mode. Either `"full"` (complete re-scan) or `"incremental"` (changes since last index only).
+</ParamField>
+
+### Response fields
+
+<ResponseField name="result" type="object">
+  A `StartJobResponse` object.
+  <Expandable title="StartJobResponse fields">
+    <ResponseField name="job_id" type="string" required>
+      UUIDv7 of the started indexing job. Use this with `query:job.list` or to correlate `event:job.progress` events.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+```json request
+{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "method": "action:job.start_indexer",
+  "params": {
+    "library_id": "01HZQK2J3M4N5P6Q7R8S9T0UV1",
+    "location_id": "01HZQK2J3M4N5P6Q7R8S9T0UV3",
+    "mode": "incremental"
+  }
+}
+```
+
+```json response
+{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "result": {
+    "job_id": "01HZQK2J3M4N5P6Q7R8S9T0UV5"
+  }
+}
+```
+
+---
+
+## action:job.cancel
+
+Requests cancellation of a running job. The daemon signals the job to stop; the `cancelled` field in the response reflects whether the job was successfully cancelled. Jobs that have already completed or were not found return `false`.
+
+### Input parameters
+
+<ParamField body="job_id" type="string" required>
+  UUIDv7 of the job to cancel.
+</ParamField>
+
+<ParamField body="library_id" type="string" required>
+  UUIDv7 of the library that owns the job.
+</ParamField>
+
+### Response fields
+
+<ResponseField name="result" type="object">
+  A `CancelJobResponse` object.
+  <Expandable title="CancelJobResponse fields">
+    <ResponseField name="cancelled" type="boolean" required>
+      `true` if the job was found and successfully cancelled. `false` if the job had already finished or could not be found.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+```json request
+{
+  "jsonrpc": "2.0",
+  "id": 4,
+  "method": "action:job.cancel",
+  "params": {
+    "job_id": "01HZQK2J3M4N5P6Q7R8S9T0UV5",
+    "library_id": "01HZQK2J3M4N5P6Q7R8S9T0UV1"
+  }
+}
+```
+
+```json response
+{
+  "jsonrpc": "2.0",
+  "id": 4,
+  "result": {
+    "cancelled": true
+  }
+}
+```
