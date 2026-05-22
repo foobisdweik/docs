@@ -1,0 +1,27 @@
+---
+title: "Week of May 22, 2026"
+description: "macOS Tahoe pivot lands: native Apple Silicon build, GPU-accelerated thumbnails, cloud volumes, and the JSON-RPC IPC API."
+---
+
+This week is a big one — Spacedrive is now a native macOS Tahoe app, with the first end-to-end pipeline from indexer to UI to automation API.
+
+## New features
+
+- **Native macOS Tahoe app on Apple Silicon.** Spacedrive now builds as a NativeAOT-compiled, code-signed, and notarized `.app` for macOS Tahoe 26.5 on M1 or later. Download as a signed `.dmg`, drag to Applications, and launch — no Rosetta, no extra runtime. See [Download and install Spacedrive](/installation).
+- **Cloud storage as first-class volumes.** S3, Google Drive, OneDrive, Dropbox, and WebDAV now appear in the sidebar alongside local disks. Browse, copy, and move files between local and cloud the same way. See [Cloud storage](/guides/cloud-storage).
+- **GPU-accelerated thumbnails.** Image and video previews are generated through VideoToolbox and Metal, so large photo libraries and high-resolution video stay smooth. The backend probes your Mac at startup and picks the fastest available path (VideoToolbox → Metal → software).
+- **Spacedrive UI on Avalonia.** The desktop UI is fully ported and live, with the sidebar, browser, jobs panel, and search wired to the daemon. See [Browse files](/guides/browsing).
+- **Indexer pipeline.** Add a [location](/guides/locations) and Spacedrive walks it, extracts metadata, generates thumbnails, and keeps the index live with macOS FSEvents — no manual re-index required for normal edits.
+- **JSON-RPC IPC API.** A new local API lets you script library management, trigger indexing, and react to file-system events from the shell or your own tools. See the [IPC overview](/ipc/overview), [queries](/ipc/queries), [actions](/ipc/actions), [events](/ipc/events), and the [`sd` CLI](/ipc/cli).
+- **Auto-start on login.** A launchd hook starts the Spacedrive daemon automatically when you log in, so libraries are ready the moment you open the app.
+
+## Updates
+
+- **Spotlight integration.** Files in your indexed locations are now submitted to Core Spotlight, so your existing ⌘-Space search habits keep working. See [Spotlight integration](/macos/spotlight).
+- **App Group socket path.** The daemon now listens at `~/Library/Group Containers/group.com.spacedrive.main/daemon.sock`, with a fallback to Application Support. Update any scripts pointing at the old path. See [IPC overview → Socket path](/ipc/overview).
+- **HEIC and HEVC support.** ffmpeg now uses VideoToolbox hardware acceleration on Apple Silicon, so HEIC photos and HEVC video thumbnails render noticeably faster.
+- **Permissions flow.** First-launch prompts for Full Disk Access and Keychain access are smoother and now link straight to the right System Settings pane. See [macOS permissions](/macos/permissions).
+
+## Bug fixes
+
+- Fixed a packaging issue where signed builds could fail to load the correct keychain search list on fresh Macs, blocking first launch for some users.
